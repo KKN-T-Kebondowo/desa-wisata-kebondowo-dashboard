@@ -9,14 +9,16 @@ export const UserProvider = ({ children }) => {
   const navigate = useNavigate();
   const [cookies, setCookies, removeCookie] = useCookies();
 
-  const login = async ({ email, password }) => {
+  const login = async ({ username, password }) => {
     const res = await api.post('/auth', {
-      email: email,
+      username: username,
       password: password,
     });
 
-    setCookies('token', res.data.token); // your token
-    setCookies('name', res.data.name); // optional data
+    console.log(res.data);
+
+    // setCookies('accessToken', res.data.token); // your token
+    // setCookies('name', res.data.name); // optional data
 
     navigate('/home');
   };
