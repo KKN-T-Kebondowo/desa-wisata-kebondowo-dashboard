@@ -17,6 +17,7 @@ import {
   AppCurrentSubject,
   AppConversionRates,
 } from '../sections/@dashboard/app';
+import { Link } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -26,34 +27,39 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Dashboard Desa Wisata Kebondowo </title>
       </Helmet>
 
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
+          Halo, selamat datang kembali
         </Typography>
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
+            <Link to="/dashboard/articles" style={{ textDecoration: 'none' }}>
+              <AppWidgetSummary title="Artikel" total={714000} icon={'ant-design:android-filled'} />
+            </Link>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Link to="/dashboard/galleries" style={{ textDecoration: 'none' }}>
+              <AppWidgetSummary title="Galeri" total={1352831} color="info" icon={'ant-design:apple-filled'} />
+            </Link>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="New Users" total={1352831} color="info" icon={'ant-design:apple-filled'} />
+            <Link to="/dashboard/tourism" style={{ textDecoration: 'none' }}>
+              <AppWidgetSummary title="Wisata" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
+            </Link>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Item Orders" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
+            <AppWidgetSummary title="Pengunjung" total={234} color="error" icon={'ant-design:bug-filled'} />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
-              title="Website Visits"
+              title="Data Website"
               subheader="(+43%) than last year"
               chartLabels={[
                 '01/01/2003',
@@ -70,19 +76,19 @@ export default function DashboardAppPage() {
               ]}
               chartData={[
                 {
-                  name: 'Team A',
+                  name: 'Artikel',
                   type: 'column',
                   fill: 'solid',
                   data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
                 },
                 {
-                  name: 'Team B',
+                  name: 'Galeri',
                   type: 'area',
                   fill: 'gradient',
                   data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
                 },
                 {
-                  name: 'Team C',
+                  name: 'Wisata',
                   type: 'line',
                   fill: 'solid',
                   data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],

@@ -4,7 +4,7 @@ import { AuthContext } from './providers/authProvider'; // Import AuthContext
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 import BlogPage from './pages/BlogPage';
-import UserPage from './pages/UserPage';
+import ArticlePage from './pages/ArticlePage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
@@ -15,24 +15,24 @@ export default function Router() {
 
   const routes = useRoutes([
     {
-      path: '/dashboard',
+      path: 'dashboard',
       element: isAuthenticated ? <DashboardLayout /> : <Navigate to="/login" />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
-        { path: 'user', element: <UserPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        { element: <Navigate to="/dashboard/home" />, index: true },
+        { path: 'home', element: <DashboardAppPage /> },
+        { path: 'destinations', element: <ArticlePage /> },
+        { path: 'galleries', element: <ProductsPage /> },
+        { path: 'articles', element: <BlogPage /> },
       ],
     },
     {
       path: 'login',
-      element: isAuthenticated ? <Navigate to="/dashboard" /> : <LoginPage />,
+      element: isAuthenticated ? <Navigate to="/dashboard/home" /> : <LoginPage />,
     },
     {
       element: <SimpleLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        { element: <Navigate to="/dashboard/home" />, index: true },
         { path: '404', element: <Page404 /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],
