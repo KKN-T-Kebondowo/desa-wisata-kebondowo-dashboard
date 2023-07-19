@@ -34,6 +34,8 @@ const AuthProvider = ({ children }) => {
     removeCookie('refresh_token', { path: '/' });
   };
 
+  console.log(accessToken);
+
   const api = axios.create({
     baseURL: process.env.BACKEND_API || 'http://localhost:8080',
     headers: {
