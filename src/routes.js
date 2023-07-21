@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
+import CreateBlogPostPage from './pages/CreateBlogPostPage';
 
 export default function Router() {
   const { isAuthenticated } = useContext(AuthContext); // Access token from AuthContext
@@ -23,6 +24,7 @@ export default function Router() {
         { path: 'destinations', element: <ArticlePage /> },
         { path: 'galleries', element: <ProductsPage /> },
         { path: 'articles', element: <BlogPage /> },
+        { path: 'articles/new', element: <CreateBlogPostPage /> },
       ],
     },
     {

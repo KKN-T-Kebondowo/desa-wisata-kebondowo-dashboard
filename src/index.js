@@ -5,6 +5,10 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 
+// import 'dotenv/config';
+
+// require('dotenv').config();
+
 // ----------------------------------------------------------------------
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

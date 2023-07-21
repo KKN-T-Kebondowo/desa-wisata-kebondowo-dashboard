@@ -4,7 +4,6 @@ import { AuthContext } from '../../../providers/authProvider';
 import { Stack, IconButton, InputAdornment, TextField } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../components/iconify';
-import axios from 'axios';
 
 const LoginForm = () => {
   const { login, api } = useContext(AuthContext);
@@ -18,7 +17,7 @@ const LoginForm = () => {
   const handleClick = async () => {
     try {
       // Perform login request and get the JWT token
-      const response = await axios.post('http://localhost:8080/api/auth/login', {
+      const response = await api.post('/api/auth/login', {
         username,
         password,
       });

@@ -36,6 +36,8 @@ const AuthProvider = ({ children }) => {
 
   console.log(accessToken);
 
+  console.log('api', process.env.REACT_APP_BACKEND_API);
+
   const api = axios.create({
     baseURL: process.env.BACKEND_API || 'http://localhost:8080',
     headers: {

@@ -6,6 +6,7 @@ import Iconify from '../components/iconify';
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
 // mock
 import POSTS from '../_mock/blog';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -18,19 +19,25 @@ const SORT_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function BlogPage() {
+  const navigate = useNavigate();
+
   return (
     <>
       <Helmet>
-        <title> Dashboard: Blog | Minimal UI </title>
+        <title> Artikel Kebondowo </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Blog
+            Artikel
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Post
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            onClick={() => navigate('/dashboard/articles/new')}
+          >
+            Artikel Baru
           </Button>
         </Stack>
 
