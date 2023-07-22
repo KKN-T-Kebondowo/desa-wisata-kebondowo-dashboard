@@ -9,6 +9,7 @@ import POSTS from '../_mock/blog';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../providers/authProvider';
+import TourismPostCard from '../sections/@dashboard/tourism/TourismPostCard';
 
 // ----------------------------------------------------------------------
 
@@ -40,20 +41,20 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title> Artikel Kebondowo </title>
+        <title> Wisata Kebondowo </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Artikel
+            Wisata
           </Typography>
           <Button
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
             onClick={() => navigate('/dashboard/articles/new')}
           >
-            Artikel Baru
+            Wisata Baru
           </Button>
         </Stack>
 
@@ -63,8 +64,8 @@ export default function BlogPage() {
         </Stack> */}
 
         <Grid container spacing={3}>
-          {data.articles.map((post, index) => (
-            <BlogPostCard key={post.id} post={post} index={index} />
+          {data.articles.map((post) => (
+            <TourismPostCard key={post.id} post={post} index={0} />
           ))}
         </Grid>
       </Container>

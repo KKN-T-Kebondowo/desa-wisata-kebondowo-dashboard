@@ -13,13 +13,13 @@ const navConfig = [
   },
   {
     title: 'wisata',
-    path: '/dashboard/destinations',
+    path: '/dashboard/tourisms',
     icon: icon('ic_user'),
   },
   {
     title: 'galeri',
     path: '/dashboard/galleries',
-    icon: icon('ic_cart'),
+    icon: icon('ic_gallery'),
   },
   {
     title: 'artikel',

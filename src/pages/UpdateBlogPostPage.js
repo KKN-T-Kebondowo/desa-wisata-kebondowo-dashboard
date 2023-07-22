@@ -72,8 +72,9 @@ export default function UpdateBlogPostPage() {
 
     if (image) {
       // Delete old image
-      await supabase.storage.from('desa-wisata-kebondowo-bucket').remove([pictureUrl]);
-
+      const { data, error } = await supabase.storage
+        .from('desa-wisata-kebondowo-bucket')
+        .remove([pictureUrl.split('desa-wisata-kebondowo-bucket/')[1]]);
       const timestamp = Date.now(); // Get the current timestamp
 
       const newImageName = `${timestamp}-${image.name}`;
@@ -97,11 +98,13 @@ export default function UpdateBlogPostPage() {
   };
 
   const handleDeleteArticle = async () => {
-    // Implement your logic to delete the article here
-    // For example:
-    // const deleteResponse = await api.delete(`/api/articles/${id}`);
-    // Redirect to the articles list page after deletion
-    // navigate('/dashboard/articles');
+    const { data, error } = await supabase.storage
+      .from('desa-wisata-kebondowo-bucket')
+      .remove([pictureUrl.split('desa-wisata-kebondowo-bucket/')[1]]);
+
+    await api.delete(`/api/articles/${id}`);
+
+    navigate('/dashboard/articles');
   };
 
   return (

@@ -111,19 +111,6 @@ export default function BlogPostCard({ post, index }) {
               ...((latestPostLarge || latestPost) && { display: 'none' }),
             }}
           />
-          <StyledAvatar
-            alt={author}
-            src={author.avatarUrl}
-            sx={{
-              ...((latestPostLarge || latestPost) && {
-                zIndex: 9,
-                top: 24,
-                left: 24,
-                width: 40,
-                height: 40,
-              }),
-            }}
-          />
 
           <StyledCover alt={title} src={picture_url} />
         </StyledCardMedia>
@@ -138,16 +125,12 @@ export default function BlogPostCard({ post, index }) {
             }),
           }}
         >
-          <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
-            {fDate(created_at)} | {author}
-          </Typography>
-
           <StyledTitle
             color="inherit"
             variant="subtitle2"
             underline="hover"
             sx={{
-              ...(latestPostLarge && { typography: 'h5', height: 60 }),
+              ...(latestPostLarge && { typography: 'h3', height: 60 }),
               ...((latestPostLarge || latestPost) && {
                 color: 'common.white',
               }),

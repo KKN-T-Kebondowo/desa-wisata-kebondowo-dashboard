@@ -4,7 +4,7 @@ import { AuthContext } from './providers/authProvider'; // Import AuthContext
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 import BlogPage from './pages/BlogPage';
-import ArticlePage from './pages/ArticlePage';
+import TourismPage from './pages/TourismPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
@@ -22,7 +22,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/home" />, index: true },
         { path: 'home', element: <DashboardAppPage /> },
-        { path: 'destinations', element: <ArticlePage /> },
+        { path: 'tourisms', element: <TourismPage /> },
         { path: 'galleries', element: <ProductsPage /> },
         { path: 'articles', element: <BlogPage /> },
         { path: 'articles/new', element: <CreateBlogPostPage /> },

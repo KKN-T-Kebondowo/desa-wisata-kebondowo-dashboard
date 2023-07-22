@@ -34,12 +34,8 @@ const AuthProvider = ({ children }) => {
     removeCookie('refresh_token', { path: '/' });
   };
 
-  console.log(accessToken);
-
-  console.log('api', process.env.REACT_APP_BACKEND_API);
-
   const api = axios.create({
-    baseURL: process.env.BACKEND_API || 'http://localhost:8080',
+    baseURL: process.env.REACT_APP_BACKEND_API || 'http://localhost:8080',
     headers: {
       Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
     },
