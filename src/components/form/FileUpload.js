@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 
-const ImageUpload = ({ onFileChange }) => {
-  const [previewImage, setPreviewImage] = useState(null);
+const ImageUpload = ({ onFileChange, oldImage }) => {
+  const [previewImage, setPreviewImage] = useState(oldImage);
+
+  useEffect(() => {
+    setPreviewImage(oldImage);
+  }, [oldImage]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];

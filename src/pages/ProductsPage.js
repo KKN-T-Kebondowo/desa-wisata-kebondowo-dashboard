@@ -14,7 +14,7 @@ import { supabase } from '../supabaseClient';
 // ----------------------------------------------------------------------
 
 export default function GalleriesPage() {
-  const { accessToken, api } = useContext(AuthContext);
+  const { api } = useContext(AuthContext);
   const [data, setData] = useState({ galleries: [], meta: { limit: 0, total: 0, offset: 0 } });
   const [openFilter, setOpenFilter] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -59,18 +59,17 @@ export default function GalleriesPage() {
 
   const handleSubmit = async () => {
     // Implement your logic to upload the image and caption
-    const fileExtension = image.name.split('.').pop(); // Get the file extension from the image name
     const timestamp = Date.now(); // Get the current timestamp
 
-    const newImageName = `${timestamp}-${image.name}.${fileExtension}`;
+    const newImageName = `${timestamp}-${image.name}`;
 
     const { img, error } = await supabase.storage
       .from('desa-wisata-kebondowo-bucket')
-      .upload('gallery/' + newImageName, image);
+      .upload('galleries/' + newImageName, image);
 
-    const path = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'gallery/' + newImageName;
+    const picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'galleries/' + newImageName;
 
-    const postResponse = await api.post('/api/galleries/', { caption, picture_url: path });
+    const postResponse = await api.post('/api/galleries/', { caption, picture_url });
 
     // Reset form values
     setCaption('');
@@ -85,13 +84,24 @@ export default function GalleriesPage() {
         {
           id: postResponse.data.gallery.id,
           caption,
-          picture_url: path,
+          picture_url,
         },
         ...prevState.galleries,
       ],
       meta: {
         ...prevState.meta,
         total: prevState.meta.total + 1,
+      },
+    }));
+  };
+
+  const handleDeleteProduct = (productId) => {
+    setData((prevData) => ({
+      ...prevData,
+      galleries: prevData.galleries.filter((product) => product.id !== productId),
+      meta: {
+        ...prevData.meta,
+        total: prevData.meta.total - 1,
       },
     }));
   };
@@ -121,7 +131,7 @@ export default function GalleriesPage() {
           </Stack>
         </Stack>
 
-        <ProductList products={data.galleries} />
+        <ProductList products={data.galleries} onDeleteProduct={handleDeleteProduct} />
         {/* <ProductCartWidget />  */}
       </Container>
 
@@ -143,7 +153,7 @@ export default function GalleriesPage() {
 
           <FileUpload onFileChange={setImage} />
 
-          <Button variant="contained" onClick={handleSubmit} disabled={!image} sx={{ mt: 3 }}>
+          <Button variant="contained" onClick={handleSubmit} disabled={!image || !caption} sx={{ mt: 3 }}>
             Upload
           </Button>
         </Container>

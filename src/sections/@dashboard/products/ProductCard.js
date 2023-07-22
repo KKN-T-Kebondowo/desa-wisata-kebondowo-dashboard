@@ -4,7 +4,10 @@ import { Box, Card, Link, Typography, Stack, Button, Modal, IconButton } from '@
 import { styled } from '@mui/material/styles';
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+
+import { supabase } from '../../../supabaseClient';
+import { AuthContext } from '../../../providers/authProvider';
 
 // ----------------------------------------------------------------------
 const StyledProductImg = styled('img')({
@@ -19,17 +22,38 @@ const StyledProductImg = styled('img')({
 
 ShopProductCard.propTypes = {
   product: PropTypes.object,
+  onDelete: PropTypes.func.isRequired,
 };
 
-export default function ShopProductCard({ product }) {
+export default function ShopProductCard({ product, onDelete }) {
+  const { api } = useContext(AuthContext);
   const { caption, picture_url } = product;
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
-  const handleDeleteItem = () => {
-    // Implement your logic to delete the item
+  const handleDeleteItem = async () => {
+    onDelete(product.id);
+
     console.log('Deleting item:', product);
+    console.log(product.picture_url);
     setOpenDeleteModal(false);
+
+    // Delete the image from the Supabase storage
+    const imageFileName = product.picture_url.split('/').pop(); // Extract the image name from the URL
+    const path = 'gallery/' + imageFileName;
+
+    const { data, error } = await supabase.storage.from('desa-wisata-kebondowo-bucket').remove([path]);
+
+    const deleteResponse = await api.delete('/api/galleries/' + product.id);
+
+    // Check for errors and handle them if necessary
+    if (error) {
+      console.error('Error deleting image:', error);
+    } else {
+      console.log('Image deleted successfully.');
+    }
+
+    // Call the onDelete function with the product id to remove the card from the list
   };
 
   return (

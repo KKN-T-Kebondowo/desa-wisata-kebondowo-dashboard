@@ -1,16 +1,24 @@
 import { Helmet } from 'react-helmet-async';
 import { Container, Typography, Button, Stack, TextField } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ImageUpload from '../components/form/FileUpload';
 
+import { supabase } from '../supabaseClient';
+import { AuthContext } from '../providers/authProvider';
+import { useNavigate } from 'react-router-dom';
+
 export default function CreateBlogPostPage() {
+  const { api } = useContext(AuthContext);
+
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [slug, setSlug] = useState('');
+
+  const navigate = useNavigate();
 
   // Function to update the slug based on the title
   const handleTitleChange = (event) => {
@@ -26,7 +34,7 @@ export default function CreateBlogPostPage() {
   };
 
   // Function to handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Implement your logic to save the article
     console.log('Title:', title);
@@ -34,6 +42,28 @@ export default function CreateBlogPostPage() {
     console.log('Content:', content);
     console.log('Slug:', slug);
     console.log('Image', image);
+
+    const timestamp = Date.now(); // Get the current timestamp
+
+    const newImageName = `${timestamp}-${image.name}`;
+
+    // Upload image to Supabase Storage bucket
+    const { img, error } = await supabase.storage
+      .from('desa-wisata-kebondowo-bucket')
+      .upload('articles/' + newImageName, image);
+
+    const picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'articles/' + newImageName;
+
+    const postResponse = await api.post('/api/articles/', {
+      title,
+      author,
+      content,
+      slug,
+      picture_url,
+    });
+
+    // Redirect to the article page
+    navigate('/dashboard/articles');
   };
 
   return (
@@ -76,7 +106,12 @@ export default function CreateBlogPostPage() {
 
           <ImageUpload onFileChange={setImage} />
 
-          <Button variant="contained" onClick={handleSubmit} sx={{ mt: 3 }}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            sx={{ mt: 3 }}
+            disabled={!title || !author || !content || !image}
+          >
             Save
           </Button>
         </form>

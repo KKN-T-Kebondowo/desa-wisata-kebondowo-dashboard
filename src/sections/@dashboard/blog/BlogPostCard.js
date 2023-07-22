@@ -8,6 +8,7 @@ import { fShortenNumber } from '../../../utils/formatNumber';
 //
 import SvgColor from '../../../components/svg-color';
 import Iconify from '../../../components/iconify';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +58,9 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { cover, title, view, comment, share, author, createdAt } = post;
+  const navigate = useNavigate();
+
+  const { picture_url, title, view, comment, share, author, created_at, slug } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 
@@ -69,9 +72,10 @@ export default function BlogPostCard({ post, index }) {
 
   return (
     <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
-      <Card sx={{ position: 'relative' }}>
+      <Card onClick={() => navigate(`/dashboard/articles/update/${slug}`)} sx={{ position: 'relative' }}>
         <StyledCardMedia
           sx={{
+            cursor: 'pointer',
             ...((latestPostLarge || latestPost) && {
               pt: 'calc(100% * 4 / 3)',
               '&:after': {
@@ -105,7 +109,7 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
           <StyledAvatar
-            alt={author.name}
+            alt={author}
             src={author.avatarUrl}
             sx={{
               ...((latestPostLarge || latestPost) && {
@@ -118,7 +122,7 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
 
-          <StyledCover alt={title} src={cover} />
+          <StyledCover alt={title} src={picture_url} />
         </StyledCardMedia>
 
         <CardContent
@@ -132,7 +136,7 @@ export default function BlogPostCard({ post, index }) {
           }}
         >
           <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
-            {fDate(createdAt)}
+            {fDate(created_at)} | {author}
           </Typography>
 
           <StyledTitle
