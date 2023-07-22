@@ -5,16 +5,17 @@ import { Button, Container, Modal, Stack, TextField, Typography } from '@mui/mat
 // components
 import { ProductSort, ProductList } from '../sections/@dashboard/products';
 // mock
-import PRODUCTS from '../_mock/products';
 import { AuthContext } from '../providers/authProvider';
 import Iconify from '../components/iconify/Iconify';
 import FileUpload from '../components/form/FileUpload';
+
+import { supabase } from '../supabaseClient';
 
 // ----------------------------------------------------------------------
 
 export default function GalleriesPage() {
   const { accessToken, api } = useContext(AuthContext);
-  const [galleries, setGalleries] = useState([]);
+  const [data, setData] = useState({ galleries: [], meta: { limit: 0, total: 0, offset: 0 } });
   const [openFilter, setOpenFilter] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [caption, setCaption] = useState('');
@@ -25,8 +26,8 @@ export default function GalleriesPage() {
     (async () => {
       const response = await api.get('/api/galleries/');
       if (response.status === 200) {
-        console.log(response);
-        setGalleries(response.data.galleries);
+        // console.log(response.data);
+        setData(response.data);
       } else {
         throw new Error('Invalid username or password');
       }
@@ -56,36 +57,43 @@ export default function GalleriesPage() {
     setCaption(event.target.value);
   };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImage(file);
-      setPreviewImage(URL.createObjectURL(file));
-    }
-  };
-
-  const handleDragOver = (event) => {
-    event.preventDefault();
-  };
-
-  const handleDrop = (event) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-    if (file) {
-      setImage(file);
-      setPreviewImage(URL.createObjectURL(file));
-    }
-  };
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Implement your logic to upload the image and caption
-    console.log('Caption:', caption);
-    console.log('Image:', image);
+    const fileExtension = image.name.split('.').pop(); // Get the file extension from the image name
+    const timestamp = Date.now(); // Get the current timestamp
+
+    const newImageName = `${timestamp}-${image.name}.${fileExtension}`;
+
+    const { img, error } = await supabase.storage
+      .from('desa-wisata-kebondowo-bucket')
+      .upload('gallery/' + newImageName, image);
+
+    const path = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'gallery/' + newImageName;
+
+    const postResponse = await api.post('/api/galleries/', { caption, picture_url: path });
+
     // Reset form values
     setCaption('');
     setImage(null);
     setPreviewImage(null);
     handleCloseModal();
+
+    // set new data on state
+    setData((prevState) => ({
+      ...prevState,
+      galleries: [
+        {
+          id: postResponse.data.gallery.id,
+          caption,
+          picture_url: path,
+        },
+        ...prevState.galleries,
+      ],
+      meta: {
+        ...prevState.meta,
+        total: prevState.meta.total + 1,
+      },
+    }));
   };
 
   return (
@@ -113,8 +121,8 @@ export default function GalleriesPage() {
           </Stack>
         </Stack>
 
-        <ProductList products={galleries} />
-        {/* <ProductCartWidget /> */}
+        <ProductList products={data.galleries} />
+        {/* <ProductCartWidget />  */}
       </Container>
 
       <Modal open={openModal} onClose={handleCloseModal}>
