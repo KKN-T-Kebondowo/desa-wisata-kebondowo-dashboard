@@ -11,6 +11,7 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import CreateBlogPostPage from './pages/CreateBlogPostPage';
 import UpdateBlogPostPage from './pages/UpdateBlogPostPage';
+import CreateTourismPage from './pages/CreateTourismPage';
 
 export default function Router() {
   const { isAuthenticated } = useContext(AuthContext); // Access token from AuthContext
@@ -23,10 +24,10 @@ export default function Router() {
         { element: <Navigate to="/dashboard/home" />, index: true },
         { path: 'home', element: <DashboardAppPage /> },
         { path: 'tourisms', element: <TourismPage /> },
+        { path: 'tourisms/new', element: <CreateTourismPage /> },
         { path: 'galleries', element: <ProductsPage /> },
         { path: 'articles', element: <BlogPage /> },
         { path: 'articles/new', element: <CreateBlogPostPage /> },
-        // TODO: slug to the article to update
         { path: 'articles/update/:articleSlug', element: <UpdateBlogPostPage /> },
       ],
     },

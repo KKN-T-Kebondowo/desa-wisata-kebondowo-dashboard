@@ -8,6 +8,7 @@ import ImageUpload from '../components/form/FileUpload';
 import { supabase } from '../supabaseClient';
 import { AuthContext } from '../providers/authProvider';
 import { useNavigate } from 'react-router-dom';
+import GoogleMapComponent from '../components/map/Map';
 
 export default function CreateTourismPage() {
   const { api } = useContext(AuthContext);
@@ -17,6 +18,11 @@ export default function CreateTourismPage() {
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [slug, setSlug] = useState('');
+  const [map, setMap] = useState({ lat: -7.3060529, lng: 110.4007872 });
+
+  const handleMapClick = (clickedPosition) => {
+    setMap(clickedPosition); // Update the map position state with the clicked position
+  };
 
   const navigate = useNavigate();
 
@@ -69,18 +75,18 @@ export default function CreateTourismPage() {
   return (
     <>
       <Helmet>
-        <title>Artikel Baru</title>
+        <title>Wisata Baru</title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Buat Artikel Baru
+            Buat Wisata Baru
           </Typography>
         </Stack>
 
         <form onSubmit={handleSubmit}>
-          <TextField label="Title" value={title} onChange={handleTitleChange} fullWidth required sx={{ mb: 3 }} />
+          <TextField label="Judul" value={title} onChange={handleTitleChange} fullWidth required sx={{ mb: 3 }} />
           <TextField
             label="Slug"
             value={slug}
@@ -91,18 +97,27 @@ export default function CreateTourismPage() {
             disabled
           />
 
-          <TextField
-            label="Author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            fullWidth
-            required
-            sx={{ mb: 3 }}
-          />
-
           {/* React Quill Rich Text Editor */}
           <ReactQuill value={content} onChange={handleContentChange} theme="snow" />
           <div style={{ marginBottom: '24px' }}></div>
+
+          <GoogleMapComponent latitude={map.lat} longitude={map.lng} onMapClick={handleMapClick} />
+          <div style={{ marginBottom: '24px' }}></div>
+          <TextField
+            label="Latitude"
+            value={map.lat}
+            onChange={(e) => setMap({ lat: parseFloat(e.target.value), lng: map.lng })}
+            required
+            type="number"
+            sx={{ mb: 3, mr: 3 }}
+          />
+          <TextField
+            label="Longitude"
+            value={map.lng}
+            onChange={(e) => setMap({ lat: map.lat, lng: parseFloat(e.target.value) })}
+            required
+            type="number"
+          />
 
           <ImageUpload onFileChange={setImage} />
 

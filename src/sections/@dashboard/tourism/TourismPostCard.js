@@ -60,7 +60,7 @@ BlogPostCard.propTypes = {
 export default function BlogPostCard({ post, index }) {
   const navigate = useNavigate();
 
-  const { picture_url, title, view, comment, share, author, created_at, slug } = post;
+  const { cover_picture_url, title, view, comment, share, author, created_at, slug } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 
@@ -112,7 +112,7 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
 
-          <StyledCover alt={title} src={picture_url} />
+          <StyledCover alt={title} src={cover_picture_url} />
         </StyledCardMedia>
 
         <CardContent

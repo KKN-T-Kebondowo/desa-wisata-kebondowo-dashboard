@@ -80,7 +80,7 @@ export default function CreateBlogPostPage() {
         </Stack>
 
         <form onSubmit={handleSubmit}>
-          <TextField label="Title" value={title} onChange={handleTitleChange} fullWidth required sx={{ mb: 3 }} />
+          <TextField label="Judul" value={title} onChange={handleTitleChange} fullWidth required sx={{ mb: 3 }} />
           <TextField
             label="Slug"
             value={slug}
@@ -92,7 +92,7 @@ export default function CreateBlogPostPage() {
           />
 
           <TextField
-            label="Author"
+            label="Penulis"
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             fullWidth

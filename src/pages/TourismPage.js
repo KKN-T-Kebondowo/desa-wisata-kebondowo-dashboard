@@ -23,13 +23,13 @@ const SORT_OPTIONS = [
 
 export default function BlogPage() {
   const { api } = useContext(AuthContext);
-  const [data, setData] = useState({ articles: [], meta: { limit: 0, total: 0, offset: 0 } });
+  const [data, setData] = useState({ tourisms: [], meta: { limit: 0, total: 0, offset: 0 } });
 
   const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
-      const response = await api.get('/api/articles/');
+      const response = await api.get('/api/tourisms/');
       if (response.status === 200) {
         setData(response.data);
       } else {
@@ -52,7 +52,7 @@ export default function BlogPage() {
           <Button
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
-            onClick={() => navigate('/dashboard/articles/new')}
+            onClick={() => navigate('/dashboard/tourisms/new')}
           >
             Wisata Baru
           </Button>
@@ -64,7 +64,7 @@ export default function BlogPage() {
         </Stack> */}
 
         <Grid container spacing={3}>
-          {data.articles.map((post) => (
+          {data.tourisms.map((post) => (
             <TourismPostCard key={post.id} post={post} index={0} />
           ))}
         </Grid>
