@@ -52,12 +52,12 @@ const StyledCover = styled('img')({
 
 // ----------------------------------------------------------------------
 
-BlogPostCard.propTypes = {
+TourismPostCard.propTypes = {
   post: PropTypes.object.isRequired,
   index: PropTypes.number,
 };
 
-export default function BlogPostCard({ post, index }) {
+export default function TourismPostCard({ post, index }) {
   const navigate = useNavigate();
 
   const { cover_picture_url, title, view, comment, share, author, created_at, slug } = post;
@@ -73,7 +73,7 @@ export default function BlogPostCard({ post, index }) {
   return (
     <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
       <Card
-        onClick={() => navigate(`/dashboard/articles/update/${slug}`)}
+        onClick={() => navigate(`/dashboard/tourisms/update/${slug}`)}
         sx={{ position: 'relative', cursor: 'pointer' }}
       >
         <StyledCardMedia

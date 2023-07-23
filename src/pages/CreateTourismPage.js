@@ -14,7 +14,6 @@ export default function CreateTourismPage() {
   const { api } = useContext(AuthContext);
 
   const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [slug, setSlug] = useState('');
@@ -44,7 +43,6 @@ export default function CreateTourismPage() {
     event.preventDefault();
     // Implement your logic to save the article
     console.log('Title:', title);
-    console.log('Author:', author);
     console.log('Content:', content);
     console.log('Slug:', slug);
     console.log('Image', image);
@@ -56,20 +54,21 @@ export default function CreateTourismPage() {
     // Upload image to Supabase Storage bucket
     const { img, error } = await supabase.storage
       .from('desa-wisata-kebondowo-bucket')
-      .upload('articles/' + newImageName, image);
+      .upload('tourisms/' + newImageName, image);
 
-    const picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'articles/' + newImageName;
+    const picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'tourisms/' + newImageName;
 
-    const postResponse = await api.post('/api/articles/', {
+    const postResponse = await api.post('/api/tourisms/', {
       title,
-      author,
-      content,
+      description: content,
       slug,
-      picture_url,
+      cover_picture_url: picture_url,
+      latitude: map.lat,
+      longitude: map.lng,
     });
 
     // Redirect to the article page
-    navigate('/dashboard/articles');
+    navigate('/dashboard/tourisms');
   };
 
   return (
@@ -121,12 +120,7 @@ export default function CreateTourismPage() {
 
           <ImageUpload onFileChange={setImage} />
 
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            sx={{ mt: 3 }}
-            disabled={!title || !author || !content || !image}
-          >
+          <Button variant="contained" onClick={handleSubmit} sx={{ mt: 3 }} disabled={!title || !content || !image}>
             Save
           </Button>
         </form>

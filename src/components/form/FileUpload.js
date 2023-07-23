@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 
-const ImageUpload = ({ onFileChange, oldImage }) => {
+const ImageUpload = ({ onFileChange, oldImage, label }) => {
   const [previewImage, setPreviewImage] = useState(oldImage);
 
   useEffect(() => {
@@ -30,30 +30,39 @@ const ImageUpload = ({ onFileChange, oldImage }) => {
   };
 
   return (
-    <div
-      style={{
-        border: '2px dashed #ddd',
-        borderRadius: '8px',
-        padding: '16px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-      }}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-      onClick={() => document.getElementById('fileInput').click()}
-    >
-      {previewImage ? (
-        <img src={previewImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '300px', marginBottom: '16px' }} />
-      ) : (
-        <Typography variant="body2" color="text.secondary">
-          Drag and drop an image or click to browse
-        </Typography>
-      )}
-      <input id="fileInput" type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
-    </div>
+    <>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+        {label ?? 'Unggah Gambar'}
+      </Typography>
+      <div
+        style={{
+          border: '2px dashed #ddd',
+          borderRadius: '8px',
+          padding: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+        }}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        onClick={() => document.getElementById('fileInput').click()}
+      >
+        {previewImage ? (
+          <img
+            src={previewImage}
+            alt="Preview"
+            style={{ maxWidth: '100%', maxHeight: '300px', marginBottom: '16px' }}
+          />
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            Drag and drop an image or click to browse
+          </Typography>
+        )}
+        <input id="fileInput" type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
+      </div>
+    </>
   );
 };
 
