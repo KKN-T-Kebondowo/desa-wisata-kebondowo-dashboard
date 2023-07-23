@@ -10,12 +10,16 @@ import Iconify from '../components/iconify/Iconify';
 import FileUpload from '../components/form/FileUpload';
 
 import { supabase } from '../supabaseClient';
+import { useParams } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
-export default function GalleriesPage() {
+export default function CreateTourismPicturePage() {
+  const { tourismSlug } = useParams();
+
   const { api } = useContext(AuthContext);
-  const [data, setData] = useState({ galleries: [], meta: { limit: 0, total: 0, offset: 0 } });
+  const [data, setData] = useState([]);
+  const [pictures, setPictures] = useState([]);
   const [openFilter, setOpenFilter] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [caption, setCaption] = useState('');
@@ -24,10 +28,12 @@ export default function GalleriesPage() {
 
   useEffect(() => {
     (async () => {
-      const response = await api.get('/api/galleries/');
+      const response = await api.get(`/api/tourisms/${tourismSlug}`);
       if (response.status === 200) {
-        // console.log(response.data);
-        setData(response.data);
+        setData(response.data.tourism);
+        if (response.data.tourism.pictures) {
+          setPictures(response.data.tourism.pictures);
+        }
       } else {
         throw new Error('Invalid username or password');
       }
@@ -65,45 +71,34 @@ export default function GalleriesPage() {
 
     const { img, error } = await supabase.storage
       .from('desa-wisata-kebondowo-bucket')
-      .upload('galleries/' + newImageName, image);
+      .upload('tourism-pictures/' + newImageName, image);
 
-    const picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'galleries/' + newImageName;
+    const picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'tourism-pictures/' + newImageName;
 
-    const postResponse = await api.post('/api/galleries/', { caption, picture_url });
+    const postResponse = await api.post('/api/tourism-pictures/', { tourism_id: data.id, caption, picture_url });
+
+    // Create the new picture object
+    const newPicture = {
+      id: postResponse.data.tourism_picture.id,
+      picture_url: postResponse.data.tourism_picture.picture_url,
+      caption: postResponse.data.tourism_picture.caption,
+      tourism_id: data.id,
+      created_at: postResponse.data.tourism_picture.created_at,
+      updated_at: postResponse.data.tourism_picture.updated_at,
+    };
+
+    // Update the pictures state by adding the new picture to the existing array
+    setPictures([...pictures, newPicture]);
 
     // Reset form values
     setCaption('');
     setImage(null);
     setPreviewImage(null);
     handleCloseModal();
-
-    // set new data on state
-    setData((prevState) => ({
-      ...prevState,
-      galleries: [
-        {
-          id: postResponse.data.gallery.id,
-          caption,
-          picture_url,
-        },
-        ...prevState.galleries,
-      ],
-      meta: {
-        ...prevState.meta,
-        total: prevState.meta.total + 1,
-      },
-    }));
   };
 
-  const handleDeleteProduct = (productId) => {
-    setData((prevData) => ({
-      ...prevData,
-      galleries: prevData.galleries.filter((product) => product.id !== productId),
-      meta: {
-        ...prevData.meta,
-        total: prevData.meta.total - 1,
-      },
-    }));
+  const handleDeleteProduct = (pictureId) => {
+    setPictures(pictures.filter((picture) => picture.id !== pictureId));
   };
 
   return (
@@ -114,7 +109,7 @@ export default function GalleriesPage() {
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4">Galeri</Typography>
+          <Typography variant="h4">Galeri {data.title}</Typography>
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenModal}>
             Foto Baru
           </Button>
@@ -131,7 +126,7 @@ export default function GalleriesPage() {
           </Stack>
         </Stack>
 
-        <ProductList products={data.galleries} onDeleteProduct={handleDeleteProduct} path={'galleries'} />
+        <ProductList products={pictures} onDeleteProduct={handleDeleteProduct} path={'tourism-pictures'} />
         {/* <ProductCartWidget />  */}
       </Container>
 

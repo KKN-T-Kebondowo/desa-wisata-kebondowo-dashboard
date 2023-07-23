@@ -20,6 +20,7 @@ import { supabase } from '../supabaseClient';
 import { AuthContext } from '../providers/authProvider';
 import { useNavigate, useParams } from 'react-router-dom';
 import GoogleMapComponent from '../components/map/Map';
+import Iconify from '../components/iconify/Iconify';
 
 export default function UpdateTourismPage() {
   const { tourismSlug } = useParams();
@@ -133,6 +134,13 @@ export default function UpdateTourismPage() {
           <Typography variant="h4" gutterBottom>
             Ubah Wisata
           </Typography>
+          <Button
+            variant="contained"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            onClick={() => navigate(`/dashboard/tourisms/update/${tourismSlug}/pictures`)}
+          >
+            Tambah Foto
+          </Button>
         </Stack>
 
         <form onSubmit={handleSubmit}>

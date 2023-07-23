@@ -13,6 +13,7 @@ import CreateBlogPostPage from './pages/CreateBlogPostPage';
 import UpdateBlogPostPage from './pages/UpdateBlogPostPage';
 import CreateTourismPage from './pages/CreateTourismPage';
 import UpdateTourismPage from './pages/UpdateTourismPage';
+import CreateTourismPicturePage from './pages/CreateTourismPicturePage';
 
 export default function Router() {
   const { isAuthenticated } = useContext(AuthContext); // Access token from AuthContext
@@ -27,6 +28,7 @@ export default function Router() {
         { path: 'tourisms', element: <TourismPage /> },
         { path: 'tourisms/new', element: <CreateTourismPage /> },
         { path: 'tourisms/update/:tourismSlug', element: <UpdateTourismPage /> },
+        { path: 'tourisms/update/:tourismSlug/pictures', element: <CreateTourismPicturePage /> },
         { path: 'galleries', element: <ProductsPage /> },
         { path: 'articles', element: <BlogPage /> },
         { path: 'articles/new', element: <CreateBlogPostPage /> },

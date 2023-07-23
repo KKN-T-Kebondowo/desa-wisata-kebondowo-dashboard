@@ -18,11 +18,28 @@ import {
   AppConversionRates,
 } from '../sections/@dashboard/app';
 import { Link } from 'react-router-dom';
+import { generateDateLabels } from '../helpers/dashboard';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../providers/authProvider';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
   const theme = useTheme();
+  const { api } = useContext(AuthContext);
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    (async () => {
+      const response = await api.get('/api/dashboard/');
+      if (response.status === 200) {
+        // console.log(response.data);
+        setData(response.data);
+      } else {
+        throw new Error('Invalid username or password');
+      }
+    })();
+  }, []);
 
   return (
     <>
@@ -38,18 +55,32 @@ export default function DashboardAppPage() {
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <Link to="/dashboard/articles" style={{ textDecoration: 'none' }}>
-              <AppWidgetSummary title="Artikel" total={714000} icon={'ant-design:android-filled'} />
+              <AppWidgetSummary
+                title="Artikel"
+                total={data ? data.total_article : 0}
+                icon={'ant-design:android-filled'}
+              />
             </Link>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Link to="/dashboard/galleries" style={{ textDecoration: 'none' }}>
-              <AppWidgetSummary title="Galeri" total={1352831} color="info" icon={'ant-design:apple-filled'} />
+              <AppWidgetSummary
+                title="Galeri"
+                total={data ? data.total_gallery : 0}
+                color="info"
+                icon={'ant-design:apple-filled'}
+              />
             </Link>
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
             <Link to="/dashboard/tourisms" style={{ textDecoration: 'none' }}>
-              <AppWidgetSummary title="Wisata" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
+              <AppWidgetSummary
+                title="Wisata"
+                total={data ? data.total_tourism : 0}
+                color="warning"
+                icon={'ant-design:windows-filled'}
+              />
             </Link>
           </Grid>
 
@@ -61,38 +92,25 @@ export default function DashboardAppPage() {
             <AppWebsiteVisits
               title="Data Website"
               subheader="(+43%) than last year"
-              chartLabels={[
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003',
-                '12/01/2003',
-              ]}
+              chartLabels={generateDateLabels()}
               chartData={[
                 {
                   name: 'Artikel',
                   type: 'column',
                   fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 31],
+                  data: data ? data.article_per_month : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 },
                 {
                   name: 'Galeri',
                   type: 'area',
                   fill: 'gradient',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43, 32],
+                  data: data ? data.gallery_per_month : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 },
                 {
                   name: 'Wisata',
                   type: 'line',
                   fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 33],
+                  data: data ? data.tourism_per_month : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 },
               ]}
             />
@@ -102,21 +120,15 @@ export default function DashboardAppPage() {
             <AppCurrentVisits
               title="Current Visits"
               chartData={[
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
+                { label: 'Wisata', value: data ? data.total_tourism : 0 },
+                { label: 'Galeri', value: data ? data.total_gallery : 0 },
+                { label: 'Artikel', value: data ? data.total_article : 0 },
               ]}
-              chartColors={[
-                theme.palette.primary.main,
-                theme.palette.info.main,
-                theme.palette.warning.main,
-                theme.palette.error.main,
-              ]}
+              chartColors={[theme.palette.info.main, theme.palette.warning.main, theme.palette.error.main]}
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
+          {/* <Grid item xs={12} md={6} lg={8}>
             <AppConversionRates
               title="Conversion Rates"
               subheader="(+43%) than last year"
@@ -218,7 +230,7 @@ export default function DashboardAppPage() {
                 { id: '5', label: 'Sprint Showcase' },
               ]}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </>

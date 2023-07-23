@@ -23,9 +23,10 @@ const StyledProductImg = styled('img')({
 ShopProductCard.propTypes = {
   product: PropTypes.object,
   onDelete: PropTypes.func.isRequired,
+  path: PropTypes.string.isRequired, // Add the path prop
 };
 
-export default function ShopProductCard({ product, onDelete }) {
+export default function ShopProductCard({ product, onDelete, path }) {
   const { api } = useContext(AuthContext);
   const { caption, picture_url } = product;
 
@@ -40,11 +41,11 @@ export default function ShopProductCard({ product, onDelete }) {
 
     // Delete the image from the Supabase storage
     const imageFileName = product.picture_url.split('/').pop(); // Extract the image name from the URL
-    const path = 'gallery/' + imageFileName;
+    const pathToDelete = `${path}/${imageFileName}`; // Use the path prop to construct the path dynamically
 
-    const { data, error } = await supabase.storage.from('desa-wisata-kebondowo-bucket').remove([path]);
+    const { data, error } = await supabase.storage.from('desa-wisata-kebondowo-bucket').remove([pathToDelete]);
 
-    const deleteResponse = await api.delete('/api/galleries/' + product.id);
+    const deleteResponse = await api.delete(`/api/${path}/${product.id}`); // Use the path prop here as well
 
     // Check for errors and handle them if necessary
     if (error) {
@@ -59,7 +60,7 @@ export default function ShopProductCard({ product, onDelete }) {
   return (
     <Card>
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        <StyledProductImg alt={caption} src={picture_url} />
+        <StyledProductImg alt={caption ?? 'wisata kebondowo'} src={picture_url} />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
@@ -93,10 +94,10 @@ export default function ShopProductCard({ product, onDelete }) {
           }}
         >
           <Typography variant="h6" sx={{ mb: 3 }}>
-            Are you sure you want to delete this item?
+            Apakah anda yakin untuk menghapus gambar ini?
           </Typography>
           <Typography variant="body1" sx={{ mb: 3 }}>
-            {caption}
+            {caption ?? ''}
           </Typography>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" onClick={() => setOpenDeleteModal(false)} sx={{ flex: 1 }}>
