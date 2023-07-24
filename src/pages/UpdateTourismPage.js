@@ -71,13 +71,6 @@ export default function UpdateTourismPage() {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Implement your logic to update the tourism data
-    console.log('Title:', title);
-    console.log('Content:', content);
-    console.log('Slug:', slug);
-    console.log('Image', image);
-    console.log('Latitude:', map.lat);
-    console.log('Longitude:', map.lng);
 
     const timestamp = Date.now(); // Get the current timestamp
 
@@ -106,7 +99,7 @@ export default function UpdateTourismPage() {
     });
 
     // Redirect to the tourism page
-    navigate('/dashboard/tourisms');
+    navigate('/dashboard/tourisms', { state: { successMessage: 'Berhasil mengubah tempat wisata!' } });
   };
 
   const handleDeleteTourism = async () => {
@@ -116,7 +109,7 @@ export default function UpdateTourismPage() {
 
     await api.delete(`/api/tourisms/${id}`);
 
-    navigate('/dashboard/tourisms');
+    navigate('/dashboard/tourisms', { state: { successMessage: 'Berhasil menghapus tempat wisata!' } });
   };
 
   const handleMapClick = (clickedPosition) => {

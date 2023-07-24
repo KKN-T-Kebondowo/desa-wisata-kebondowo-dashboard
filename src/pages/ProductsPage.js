@@ -11,6 +11,8 @@ import FileUpload from '../components/form/FileUpload';
 
 import { supabase } from '../supabaseClient';
 
+import toast, { Toaster } from 'react-hot-toast';
+
 // ----------------------------------------------------------------------
 
 export default function GalleriesPage() {
@@ -76,6 +78,7 @@ export default function GalleriesPage() {
     setImage(null);
     setPreviewImage(null);
     handleCloseModal();
+    toast.success('Foto berhasil ditambahkan!');
 
     // set new data on state
     setData((prevState) => ({
@@ -104,6 +107,8 @@ export default function GalleriesPage() {
         total: prevData.meta.total - 1,
       },
     }));
+
+    toast.success('Foto berhasil dihapus!');
   };
 
   return (
@@ -111,6 +116,8 @@ export default function GalleriesPage() {
       <Helmet>
         <title>Galeri Kebondowo</title>
       </Helmet>
+
+      <Toaster />
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>

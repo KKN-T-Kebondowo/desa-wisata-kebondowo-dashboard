@@ -41,11 +41,6 @@ export default function CreateTourismPage() {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Implement your logic to save the article
-    console.log('Title:', title);
-    console.log('Content:', content);
-    console.log('Slug:', slug);
-    console.log('Image', image);
 
     const timestamp = Date.now(); // Get the current timestamp
 
@@ -68,7 +63,7 @@ export default function CreateTourismPage() {
     });
 
     // Redirect to the article page
-    navigate('/dashboard/tourisms');
+    navigate('/dashboard/tourisms', { state: { successMessage: 'Berhasil menambahkan tempat wisata baru!' } });
   };
 
   return (

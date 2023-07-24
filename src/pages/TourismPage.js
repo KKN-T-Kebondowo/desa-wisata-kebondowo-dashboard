@@ -3,13 +3,14 @@ import { Helmet } from 'react-helmet-async';
 import { Grid, Button, Container, Stack, Typography } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
-import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';
 // mock
 import POSTS from '../_mock/blog';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../providers/authProvider';
 import TourismPostCard from '../sections/@dashboard/tourism/TourismPostCard';
+
+import toast, { Toaster } from 'react-hot-toast';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +27,9 @@ export default function BlogPage() {
   const [data, setData] = useState({ tourisms: [], meta: { limit: 0, total: 0, offset: 0 } });
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const successMessage = location.state?.successMessage || null;
 
   useEffect(() => {
     (async () => {
@@ -36,6 +40,10 @@ export default function BlogPage() {
         throw new Error('Invalid username or password');
       }
     })();
+
+    if (successMessage) {
+      toast.success(successMessage);
+    }
   }, []);
 
   return (
@@ -43,6 +51,8 @@ export default function BlogPage() {
       <Helmet>
         <title> Wisata Kebondowo </title>
       </Helmet>
+
+      <Toaster />
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>

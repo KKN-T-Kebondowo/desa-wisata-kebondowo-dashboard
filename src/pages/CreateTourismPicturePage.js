@@ -12,6 +12,8 @@ import FileUpload from '../components/form/FileUpload';
 import { supabase } from '../supabaseClient';
 import { useParams } from 'react-router-dom';
 
+import toast, { Toaster } from 'react-hot-toast';
+
 // ----------------------------------------------------------------------
 
 export default function CreateTourismPicturePage() {
@@ -95,10 +97,13 @@ export default function CreateTourismPicturePage() {
     setImage(null);
     setPreviewImage(null);
     handleCloseModal();
+
+    toast.success('Foto berhasil ditambahkan!');
   };
 
   const handleDeleteProduct = (pictureId) => {
     setPictures(pictures.filter((picture) => picture.id !== pictureId));
+    toast.success('Foto berhasil dihapus!');
   };
 
   return (

@@ -94,7 +94,7 @@ export default function UpdateBlogPostPage() {
     });
 
     // Redirect to the article page
-    navigate('/dashboard/articles');
+    navigate('/dashboard/articles', { state: { successMessage: 'Berhasil mengubah artikel!' } });
   };
 
   const handleDeleteArticle = async () => {
@@ -104,7 +104,7 @@ export default function UpdateBlogPostPage() {
 
     await api.delete(`/api/articles/${id}`);
 
-    navigate('/dashboard/articles');
+    navigate('/dashboard/articles', { state: { successMessage: 'Berhasil menghapus artikel!' } });
   };
 
   return (

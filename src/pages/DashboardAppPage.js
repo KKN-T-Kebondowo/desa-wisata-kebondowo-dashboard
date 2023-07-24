@@ -118,7 +118,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
-              title="Current Visits"
+              title="Data Website"
               chartData={[
                 { label: 'Wisata', value: data ? data.total_tourism : 0 },
                 { label: 'Galeri', value: data ? data.total_gallery : 0 },

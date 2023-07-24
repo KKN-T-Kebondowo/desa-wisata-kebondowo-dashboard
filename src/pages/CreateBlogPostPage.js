@@ -63,7 +63,7 @@ export default function CreateBlogPostPage() {
     });
 
     // Redirect to the article page
-    navigate('/dashboard/articles');
+    navigate('/dashboard/articles', { state: { successMessage: 'Berhasil membuat artikel!' } });
   };
 
   return (
