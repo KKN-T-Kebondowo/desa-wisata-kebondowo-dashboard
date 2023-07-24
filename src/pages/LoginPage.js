@@ -62,7 +62,7 @@ export default function LoginPage() {
         {mdUp && (
           <StyledSection>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
+              Halo, Selamat Datang
             </Typography>
             <img src="/assets/illustrations/illustration_login.png" alt="login" />
           </StyledSection>
@@ -72,11 +72,6 @@ export default function LoginPage() {
           <StyledContent>
             <Typography variant="h4" gutterBottom>
               Masuk
-            </Typography>
-
-            <Typography variant="body2" sx={{ mb: 5 }}>
-              Don’t have an account? {''}
-              <Link variant="subtitle2">Get started</Link>
             </Typography>
 
             <LoginForm />

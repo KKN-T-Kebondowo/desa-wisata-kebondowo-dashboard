@@ -52,7 +52,8 @@ const LoginForm = () => {
       <Stack spacing={3}>
         <TextField
           name="username"
-          label="Username address"
+          label="Username"
+          type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           error={error !== null}
