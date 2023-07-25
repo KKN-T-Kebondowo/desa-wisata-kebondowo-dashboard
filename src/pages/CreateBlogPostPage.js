@@ -16,17 +16,8 @@ export default function CreateBlogPostPage() {
   const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
-  const [slug, setSlug] = useState('');
 
   const navigate = useNavigate();
-
-  // Function to update the slug based on the title
-  const handleTitleChange = (event) => {
-    const newTitle = event.target.value;
-    setTitle(newTitle);
-    const slugifiedTitle = newTitle.toLowerCase().replace(/\s+/g, '-');
-    setSlug(slugifiedTitle);
-  };
 
   // Function to handle the rich text editor changes
   const handleContentChange = (value) => {
@@ -36,12 +27,8 @@ export default function CreateBlogPostPage() {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Implement your logic to save the article
-    console.log('Title:', title);
-    console.log('Author:', author);
-    console.log('Content:', content);
-    console.log('Slug:', slug);
-    console.log('Image', image);
+
+    const slug = title.toLowerCase().replace(/\s+/g, '-');
 
     const timestamp = Date.now(); // Get the current timestamp
 
@@ -80,15 +67,13 @@ export default function CreateBlogPostPage() {
         </Stack>
 
         <form onSubmit={handleSubmit}>
-          <TextField label="Judul" value={title} onChange={handleTitleChange} fullWidth required sx={{ mb: 3 }} />
           <TextField
-            label="Slug"
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
+            label="Judul"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             fullWidth
             required
             sx={{ mb: 3 }}
-            disabled
           />
 
           <TextField

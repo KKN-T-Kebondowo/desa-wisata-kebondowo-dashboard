@@ -31,7 +31,6 @@ export default function UpdateBlogPostPage() {
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [pictureUrl, setPictureUrl] = useState('');
-  const [slug, setSlug] = useState('');
 
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -43,21 +42,12 @@ export default function UpdateBlogPostPage() {
         setTitle(response.data.article.title);
         setAuthor(response.data.article.author);
         setContent(response.data.article.content);
-        setSlug(response.data.article.slug);
         setPictureUrl(response.data.article.picture_url);
       } else {
         throw new Error('Invalid username or password');
       }
     })();
   }, []);
-
-  // Function to update the slug based on the title
-  const handleTitleChange = (event) => {
-    const newTitle = event.target.value;
-    setTitle(newTitle);
-    const slugifiedTitle = newTitle.toLowerCase().replace(/\s+/g, '-');
-    setSlug(slugifiedTitle);
-  };
 
   // Function to handle the rich text editor changes
   const handleContentChange = (value) => {
@@ -84,6 +74,8 @@ export default function UpdateBlogPostPage() {
 
       picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'articles/' + newImageName;
     }
+
+    const slug = title.toLowerCase().replace(/\s+/g, '-');
 
     const postResponse = await api.put(`/api/articles/${id}`, {
       title,
@@ -121,15 +113,13 @@ export default function UpdateBlogPostPage() {
         </Stack>
 
         <form onSubmit={handleSubmit}>
-          <TextField label="Title" value={title} onChange={handleTitleChange} fullWidth required sx={{ mb: 3 }} />
           <TextField
-            label="Slug"
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
+            label="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             fullWidth
             required
             sx={{ mb: 3 }}
-            disabled
           />
 
           <TextField

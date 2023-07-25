@@ -22,13 +22,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import GoogleMapComponent from '../components/map/Map';
 import Iconify from '../components/iconify/Iconify';
 
-export default function UpdateTourismPage() {
-  const { tourismSlug } = useParams();
+export default function UpdateUMKMPage() {
+  const { umkmSlug } = useParams();
   const navigate = useNavigate();
   const { api } = useContext(AuthContext);
 
   const [id, setId] = useState(0);
   const [title, setTitle] = useState('');
+  const [owner, setOwner] = useState('');
+  const [contact, setContact] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [pictureUrl, setPictureUrl] = useState('');
@@ -39,16 +41,18 @@ export default function UpdateTourismPage() {
   // Fetch existing tourism data
   useEffect(() => {
     (async () => {
-      const response = await api.get(`/api/tourisms/${tourismSlug}`);
+      const response = await api.get(`/api/umkms/${umkmSlug}`);
       if (response.status === 200) {
-        setId(response.data.tourism.id);
-        setTitle(response.data.tourism.title);
-        setContent(response.data.tourism.description);
-        setMap({ lat: response.data.tourism.latitude, lng: response.data.tourism.longitude });
-        setPictureUrl(response.data.tourism.cover_picture_url);
-        setMap({ lat: response.data.tourism.latitude, lng: response.data.tourism.longitude });
+        setId(response.data.umkm.id);
+        setTitle(response.data.umkm.title);
+        setContact(response.data.umkm.contact);
+        setOwner(response.data.umkm.contact_name);
+        setContent(response.data.umkm.description);
+        setMap({ lat: response.data.umkm.latitude, lng: response.data.umkm.longitude });
+        setPictureUrl(response.data.umkm.cover_picture_url);
+        setMap({ lat: response.data.umkm.latitude, lng: response.data.umkm.longitude });
       } else {
-        throw new Error('Invalid tourism data');
+        throw new Error('Invalid umkm data');
       }
     })();
   }, []);
@@ -62,8 +66,6 @@ export default function UpdateTourismPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const slug = title.toLowerCase().replace(/\s+/g, '-');
-
     const timestamp = Date.now(); // Get the current timestamp
 
     let picture_url = '';
@@ -76,22 +78,26 @@ export default function UpdateTourismPage() {
       const newImageName = `${timestamp}-${image.name}`;
 
       // Upload image to Supabase Storage bucket
-      await supabase.storage.from('desa-wisata-kebondowo-bucket').upload('tourisms/' + newImageName, image);
+      await supabase.storage.from('desa-wisata-kebondowo-bucket').upload('umkms/' + newImageName, image);
 
-      picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'tourisms/' + newImageName;
+      picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'umkms/' + newImageName;
     }
 
-    const postResponse = await api.put(`/api/tourisms/${id}`, {
+    const slug = title.toLowerCase().replace(/\s+/g, '-');
+
+    const postResponse = await api.put(`/api/umkms/${id}`, {
       title,
       description: content,
       slug,
+      contact,
+      contact_name: owner,
       cover_picture_url: picture_url,
       latitude: map.lat,
       longitude: map.lng,
     });
 
     // Redirect to the tourism page
-    navigate('/dashboard/tourisms', { state: { successMessage: 'Berhasil mengubah tempat wisata!' } });
+    navigate('/dashboard/umkm', { state: { successMessage: 'Berhasil mengubah UMKM!' } });
   };
 
   const handleDeleteTourism = async () => {
@@ -99,9 +105,9 @@ export default function UpdateTourismPage() {
       .from('desa-wisata-kebondowo-bucket')
       .remove([pictureUrl.split('desa-wisata-kebondowo-bucket/')[1]]);
 
-    await api.delete(`/api/tourisms/${id}`);
+    await api.delete(`/api/umkms/${id}`);
 
-    navigate('/dashboard/tourisms', { state: { successMessage: 'Berhasil menghapus tempat wisata!' } });
+    navigate('/dashboard/umkm', { state: { successMessage: 'Berhasil menghapus UMKM!' } });
   };
 
   const handleMapClick = (clickedPosition) => {
@@ -111,18 +117,18 @@ export default function UpdateTourismPage() {
   return (
     <>
       <Helmet>
-        <title>Wisata Baru</title>
+        <title>Ubah UMKM</title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Ubah Wisata
+            Ubah UMKM
           </Typography>
           <Button
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
-            onClick={() => navigate(`/dashboard/tourisms/update/${tourismSlug}/pictures`)}
+            onClick={() => navigate(`/dashboard/umkm/update/${umkmSlug}/pictures`)}
           >
             Tambah Foto
           </Button>
@@ -136,6 +142,24 @@ export default function UpdateTourismPage() {
             fullWidth
             required
             sx={{ mb: 3 }}
+          />
+
+          <TextField
+            label="Pemilik"
+            value={owner}
+            onChange={(e) => setOwner(e.target.value)}
+            fullWidth
+            required
+            sx={{ mb: 3 }}
+          />
+          <TextField
+            label="Nomor HP Pemilik"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            fullWidth
+            required
+            sx={{ mb: 3 }}
+            type="number"
           />
 
           {/* React Quill Rich Text Editor */}
@@ -180,9 +204,9 @@ export default function UpdateTourismPage() {
       </Container>
 
       <Dialog open={isDeleteModalOpen} onClose={() => setDeleteModalOpen(false)}>
-        <DialogTitle>Delete Tourism</DialogTitle>
+        <DialogTitle>Hapus UMKM</DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete this tourism?</DialogContentText>
+          <DialogContentText>Apakah anda yakin untuk menghapus UMKM ini?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteModalOpen(false)}>Cancel</Button>

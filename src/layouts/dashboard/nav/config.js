@@ -17,6 +17,11 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
+    title: 'UMKM',
+    path: '/dashboard/umkm',
+    icon: icon('ic_user'),
+  },
+  {
     title: 'galeri',
     path: '/dashboard/galleries',
     icon: icon('ic_gallery'),

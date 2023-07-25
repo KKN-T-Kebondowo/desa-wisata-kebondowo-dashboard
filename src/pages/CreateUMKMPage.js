@@ -10,11 +10,13 @@ import { AuthContext } from '../providers/authProvider';
 import { useNavigate } from 'react-router-dom';
 import GoogleMapComponent from '../components/map/Map';
 
-export default function CreateTourismPage() {
+export default function CreateUMKMPage() {
   const { api } = useContext(AuthContext);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [contact, setContact] = useState('');
+  const [owner, setOwner] = useState('');
   const [image, setImage] = useState(null);
   const [map, setMap] = useState({ lat: -7.3060529, lng: 110.4007872 });
 
@@ -42,33 +44,35 @@ export default function CreateTourismPage() {
     // Upload image to Supabase Storage bucket
     const { img, error } = await supabase.storage
       .from('desa-wisata-kebondowo-bucket')
-      .upload('tourisms/' + newImageName, image);
+      .upload('umkms/' + newImageName, image);
 
-    const picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'tourisms/' + newImageName;
+    const picture_url = process.env.REACT_APP_SUPABASE_STORAGE_URL + 'umkms/' + newImageName;
 
-    const postResponse = await api.post('/api/tourisms/', {
+    const postResponse = await api.post('/api/umkms/', {
       title,
       description: content,
       slug,
       cover_picture_url: picture_url,
+      contact,
+      contact_name: owner,
       latitude: map.lat,
       longitude: map.lng,
     });
 
     // Redirect to the article page
-    navigate('/dashboard/tourisms', { state: { successMessage: 'Berhasil menambahkan tempat wisata baru!' } });
+    navigate('/dashboard/umkm', { state: { successMessage: 'Berhasil menambahkan tempat umkm baru!' } });
   };
 
   return (
     <>
       <Helmet>
-        <title>Wisata Baru</title>
+        <title>UMKM Baru</title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Buat Wisata Baru
+            Buat UMKM Baru
           </Typography>
         </Stack>
 
@@ -80,6 +84,23 @@ export default function CreateTourismPage() {
             fullWidth
             required
             sx={{ mb: 3 }}
+          />
+          <TextField
+            label="Pemilik"
+            value={owner}
+            onChange={(e) => setOwner(e.target.value)}
+            fullWidth
+            required
+            sx={{ mb: 3 }}
+          />
+          <TextField
+            label="Nomor HP Pemilik"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            fullWidth
+            required
+            sx={{ mb: 3 }}
+            type="number"
           />
 
           {/* React Quill Rich Text Editor */}

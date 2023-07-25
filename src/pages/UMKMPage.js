@@ -22,9 +22,9 @@ const SORT_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function BlogPage() {
+export default function UMKMPage() {
   const { api } = useContext(AuthContext);
-  const [data, setData] = useState({ tourisms: [], meta: { limit: 0, total: 0, offset: 0 } });
+  const [data, setData] = useState({ umkms: [], meta: { limit: 0, total: 0, offset: 0 } });
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,7 +33,7 @@ export default function BlogPage() {
 
   useEffect(() => {
     (async () => {
-      const response = await api.get('/api/tourisms/');
+      const response = await api.get('/api/umkms/');
       if (response.status === 200) {
         setData(response.data);
       } else {
@@ -49,7 +49,7 @@ export default function BlogPage() {
   return (
     <>
       <Helmet>
-        <title> Wisata Kebondowo </title>
+        <title> UMKM Kebondowo </title>
       </Helmet>
 
       <Toaster />
@@ -57,14 +57,14 @@ export default function BlogPage() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Wisata
+            UMKM
           </Typography>
           <Button
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
-            onClick={() => navigate('/dashboard/tourisms/new')}
+            onClick={() => navigate('/dashboard/umkm/new')}
           >
-            Wisata Baru
+            UMKM Baru
           </Button>
         </Stack>
 
@@ -74,8 +74,8 @@ export default function BlogPage() {
         </Stack> */}
 
         <Grid container spacing={3}>
-          {data.tourisms.map((post) => (
-            <TourismPostCard key={post.id} post={post} index={0} path={'tourisms'} />
+          {data.umkms.map((post) => (
+            <TourismPostCard key={post.id} post={post} index={0} path={'umkm'} />
           ))}
         </Grid>
       </Container>

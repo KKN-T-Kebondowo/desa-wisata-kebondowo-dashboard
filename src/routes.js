@@ -14,6 +14,10 @@ import UpdateBlogPostPage from './pages/UpdateBlogPostPage';
 import CreateTourismPage from './pages/CreateTourismPage';
 import UpdateTourismPage from './pages/UpdateTourismPage';
 import CreateTourismPicturePage from './pages/CreateTourismPicturePage';
+import UMKMPage from './pages/UMKMPage';
+import CreateUMKMPage from './pages/CreateUMKMPage';
+import UpdateUMKMPage from './pages/UpdateUMKMPage';
+import CreateUMKMPicturePage from './pages/UMKMPicturePage';
 
 export default function Router() {
   const { isAuthenticated } = useContext(AuthContext); // Access token from AuthContext
@@ -33,6 +37,10 @@ export default function Router() {
         { path: 'articles', element: <BlogPage /> },
         { path: 'articles/new', element: <CreateBlogPostPage /> },
         { path: 'articles/update/:articleSlug', element: <UpdateBlogPostPage /> },
+        { path: 'umkm', element: <UMKMPage /> },
+        { path: 'umkm/new', element: <CreateUMKMPage /> },
+        { path: 'umkm/update/:umkmSlug', element: <UpdateUMKMPage /> },
+        { path: 'umkm/update/:umkmSlug/pictures', element: <CreateUMKMPicturePage /> },
       ],
     },
     {
