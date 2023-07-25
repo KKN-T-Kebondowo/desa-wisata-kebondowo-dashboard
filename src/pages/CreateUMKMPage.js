@@ -15,7 +15,7 @@ export default function CreateUMKMPage() {
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [contact, setContact] = useState('');
+  const [contact, setContact] = useState('+62');
   const [owner, setOwner] = useState('');
   const [image, setImage] = useState(null);
   const [map, setMap] = useState({ lat: -7.3060529, lng: 110.4007872 });
@@ -29,6 +29,18 @@ export default function CreateUMKMPage() {
   // Function to handle the rich text editor changes
   const handleContentChange = (value) => {
     setContent(value);
+  };
+
+  const handlePhoneNumberBlur = () => {
+    let clearContact = contact;
+    if (contact && contact.startsWith('0')) {
+      clearContact = contact.replace(/^0+/, '');
+    }
+    // Check if the contact has a value and if it doesn't start with "+62", add the prefix
+    if (contact && !contact.startsWith('+62')) {
+      clearContact = '+62' + clearContact;
+    }
+    setContact(clearContact);
   };
 
   // Function to handle form submission
@@ -97,10 +109,12 @@ export default function CreateUMKMPage() {
             label="Nomor HP Pemilik"
             value={contact}
             onChange={(e) => setContact(e.target.value)}
+            onBlur={handlePhoneNumberBlur} // Add onBlur event to ensure the "+62" prefix remains
             fullWidth
             required
+            placeholder="+62"
             sx={{ mb: 3 }}
-            type="number"
+            type="tel" // Set the input type to "tel" for phone numbers
           />
 
           {/* React Quill Rich Text Editor */}
