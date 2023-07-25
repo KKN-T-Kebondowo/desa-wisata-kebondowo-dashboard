@@ -38,6 +38,8 @@ export default function UpdateUMKMPage() {
 
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   // Fetch existing tourism data
   useEffect(() => {
     (async () => {
@@ -62,8 +64,21 @@ export default function UpdateUMKMPage() {
     setContent(value);
   };
 
+  const handlePhoneNumberBlur = () => {
+    let clearContact = contact;
+    if (contact && contact.startsWith('0')) {
+      clearContact = contact.replace(/^0+/, '');
+    }
+    // Check if the contact has a value and if it doesn't start with "+62", add the prefix
+    if (contact && !contact.startsWith('+62')) {
+      clearContact = '+62' + clearContact;
+    }
+    setContact(clearContact);
+  };
+
   // Function to handle form submission
   const handleSubmit = async (event) => {
+    setLoading(true);
     event.preventDefault();
 
     const timestamp = Date.now(); // Get the current timestamp
@@ -101,6 +116,7 @@ export default function UpdateUMKMPage() {
   };
 
   const handleDeleteTourism = async () => {
+    setLoading(true);
     const { data, error } = await supabase.storage
       .from('desa-wisata-kebondowo-bucket')
       .remove([pictureUrl.split('desa-wisata-kebondowo-bucket/')[1]]);
@@ -156,10 +172,12 @@ export default function UpdateUMKMPage() {
             label="Nomor HP Pemilik"
             value={contact}
             onChange={(e) => setContact(e.target.value)}
+            onBlur={handlePhoneNumberBlur} // Add onBlur event to ensure the "+62" prefix remains
             fullWidth
             required
+            placeholder="+62"
             sx={{ mb: 3 }}
-            type="number"
+            type="tel" // Set the input type to "tel" for phone numbers
           />
 
           {/* React Quill Rich Text Editor */}
@@ -186,7 +204,7 @@ export default function UpdateUMKMPage() {
 
           <ImageUpload onFileChange={setImage} oldImage={pictureUrl} />
 
-          <Button variant="contained" onClick={handleSubmit} sx={{ mt: 3 }} disabled={!title || !content}>
+          <Button variant="contained" onClick={handleSubmit} sx={{ mt: 3 }} disabled={!title || !content || loading}>
             Save
           </Button>
 
@@ -197,6 +215,7 @@ export default function UpdateUMKMPage() {
               setDeleteModalOpen(true);
             }}
             sx={{ mt: 3, ml: 2 }}
+            disabled={loading}
           >
             Delete
           </Button>
@@ -210,7 +229,7 @@ export default function UpdateUMKMPage() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteModalOpen(false)}>Cancel</Button>
-          <Button color="error" onClick={handleDeleteTourism}>
+          <Button color="error" onClick={handleDeleteTourism} disabled={loading}>
             Delete
           </Button>
         </DialogActions>

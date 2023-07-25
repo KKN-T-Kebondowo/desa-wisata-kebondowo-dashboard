@@ -27,6 +27,7 @@ export default function CreateTourismPicturePage() {
   const [caption, setCaption] = useState('');
   const [image, setImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -66,6 +67,7 @@ export default function CreateTourismPicturePage() {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     // Implement your logic to upload the image and caption
     const timestamp = Date.now(); // Get the current timestamp
 
@@ -99,6 +101,7 @@ export default function CreateTourismPicturePage() {
     handleCloseModal();
 
     toast.success('Foto berhasil ditambahkan!');
+    setLoading(false);
   };
 
   const handleDeleteProduct = (pictureId) => {
@@ -153,7 +156,7 @@ export default function CreateTourismPicturePage() {
 
           <FileUpload onFileChange={setImage} />
 
-          <Button variant="contained" onClick={handleSubmit} disabled={!image || !caption} sx={{ mt: 3 }}>
+          <Button variant="contained" onClick={handleSubmit} disabled={!image || !caption || loading} sx={{ mt: 3 }}>
             Upload
           </Button>
         </Container>

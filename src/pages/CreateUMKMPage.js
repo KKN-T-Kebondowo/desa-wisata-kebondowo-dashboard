@@ -20,6 +20,8 @@ export default function CreateUMKMPage() {
   const [image, setImage] = useState(null);
   const [map, setMap] = useState({ lat: -7.3060529, lng: 110.4007872 });
 
+  const [loading, setLoading] = useState(false);
+
   const handleMapClick = (clickedPosition) => {
     setMap(clickedPosition); // Update the map position state with the clicked position
   };
@@ -46,6 +48,7 @@ export default function CreateUMKMPage() {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     const slug = title.toLowerCase().replace(/\s+/g, '-');
 
@@ -141,7 +144,12 @@ export default function CreateUMKMPage() {
 
           <ImageUpload onFileChange={setImage} />
 
-          <Button variant="contained" onClick={handleSubmit} sx={{ mt: 3 }} disabled={!title || !content || !image}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            sx={{ mt: 3 }}
+            disabled={!title || !content || !image || loading}
+          >
             Save
           </Button>
         </form>

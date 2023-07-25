@@ -23,6 +23,7 @@ import GoogleMapComponent from '../components/map/Map';
 import Iconify from '../components/iconify/Iconify';
 
 export default function UpdateTourismPage() {
+  const [loading, setLoading] = useState(false);
   const { tourismSlug } = useParams();
   const navigate = useNavigate();
   const { api } = useContext(AuthContext);
@@ -61,6 +62,7 @@ export default function UpdateTourismPage() {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     const slug = title.toLowerCase().replace(/\s+/g, '-');
 
@@ -91,6 +93,7 @@ export default function UpdateTourismPage() {
     });
 
     // Redirect to the tourism page
+    setLoading(false);
     navigate('/dashboard/tourisms', { state: { successMessage: 'Berhasil mengubah tempat wisata!' } });
   };
 

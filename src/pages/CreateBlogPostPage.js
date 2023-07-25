@@ -17,6 +17,8 @@ export default function CreateBlogPostPage() {
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   // Function to handle the rich text editor changes
@@ -27,6 +29,7 @@ export default function CreateBlogPostPage() {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     const slug = title.toLowerCase().replace(/\s+/g, '-');
 
@@ -95,7 +98,7 @@ export default function CreateBlogPostPage() {
             variant="contained"
             onClick={handleSubmit}
             sx={{ mt: 3 }}
-            disabled={!title || !author || !content || !image}
+            disabled={!title || !author || !content || !image || loading}
           >
             Save
           </Button>

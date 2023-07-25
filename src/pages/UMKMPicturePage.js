@@ -18,6 +18,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 export default function CreateUMKMPicturePage() {
   const { umkmSlug } = useParams();
+  const [loading, setLoading] = useState(false);
 
   const { api } = useContext(AuthContext);
   const [data, setData] = useState([]);
@@ -66,6 +67,7 @@ export default function CreateUMKMPicturePage() {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     // Implement your logic to upload the image and caption
     const timestamp = Date.now(); // Get the current timestamp
 
@@ -99,6 +101,7 @@ export default function CreateUMKMPicturePage() {
     handleCloseModal();
 
     toast.success('Foto berhasil ditambahkan!');
+    setLoading(false);
   };
 
   const handleDeleteProduct = (pictureId) => {
@@ -111,6 +114,8 @@ export default function CreateUMKMPicturePage() {
       <Helmet>
         <title>Galeri Kebondowo</title>
       </Helmet>
+
+      <Toaster />
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -153,7 +158,7 @@ export default function CreateUMKMPicturePage() {
 
           <FileUpload onFileChange={setImage} />
 
-          <Button variant="contained" onClick={handleSubmit} disabled={!image || !caption} sx={{ mt: 3 }}>
+          <Button variant="contained" onClick={handleSubmit} disabled={!image || !caption || loading} sx={{ mt: 3 }}>
             Upload
           </Button>
         </Container>

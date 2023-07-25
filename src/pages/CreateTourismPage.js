@@ -12,6 +12,7 @@ import GoogleMapComponent from '../components/map/Map';
 
 export default function CreateTourismPage() {
   const { api } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -32,6 +33,7 @@ export default function CreateTourismPage() {
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     const slug = title.toLowerCase().replace(/\s+/g, '-');
 
@@ -106,7 +108,12 @@ export default function CreateTourismPage() {
 
           <ImageUpload onFileChange={setImage} />
 
-          <Button variant="contained" onClick={handleSubmit} sx={{ mt: 3 }} disabled={!title || !content || !image}>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            sx={{ mt: 3 }}
+            disabled={!title || !content || !image || loading}
+          >
             Save
           </Button>
         </form>

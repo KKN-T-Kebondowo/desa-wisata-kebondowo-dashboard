@@ -24,6 +24,8 @@ export default function GalleriesPage() {
   const [image, setImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     (async () => {
       const response = await api.get('/api/galleries/');
@@ -60,6 +62,7 @@ export default function GalleriesPage() {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     // Implement your logic to upload the image and caption
     const timestamp = Date.now(); // Get the current timestamp
 
@@ -96,6 +99,8 @@ export default function GalleriesPage() {
         total: prevState.meta.total + 1,
       },
     }));
+
+    setLoading(false);
   };
 
   const handleDeleteProduct = (productId) => {
@@ -160,7 +165,7 @@ export default function GalleriesPage() {
 
           <FileUpload onFileChange={setImage} />
 
-          <Button variant="contained" onClick={handleSubmit} disabled={!image || !caption} sx={{ mt: 3 }}>
+          <Button variant="contained" onClick={handleSubmit} disabled={!image || !caption || loading} sx={{ mt: 3 }}>
             Upload
           </Button>
         </Container>

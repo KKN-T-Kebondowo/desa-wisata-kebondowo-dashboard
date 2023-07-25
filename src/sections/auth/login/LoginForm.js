@@ -6,6 +6,7 @@ import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../components/iconify';
 
 const LoginForm = () => {
+  const [loading, setLoading] = useState(false);
   const { login, api } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -15,6 +16,7 @@ const LoginForm = () => {
   const [error, setError] = useState(null);
 
   const handleClick = async () => {
+    setLoading(true);
     try {
       // Perform login request and get the JWT token
       const response = await api.post('/api/auth/login', {
@@ -37,6 +39,8 @@ const LoginForm = () => {
       // Handle login error
       setError(error.message);
       console.error('Login failed:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,7 +86,7 @@ const LoginForm = () => {
         />
       </Stack>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}></Stack>
-      <LoadingButton fullWidth size="large" type="button" variant="contained" onClick={handleClick}>
+      <LoadingButton fullWidth size="large" type="button" variant="contained" onClick={handleClick} disabled={loading}>
         Login
       </LoadingButton>
     </>
