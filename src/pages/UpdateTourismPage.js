@@ -93,7 +93,6 @@ export default function UpdateTourismPage() {
     });
 
     // Redirect to the tourism page
-    setLoading(false);
     navigate('/dashboard/tourisms', { state: { successMessage: 'Berhasil mengubah tempat wisata!' } });
   };
 
@@ -165,7 +164,7 @@ export default function UpdateTourismPage() {
 
           <ImageUpload onFileChange={setImage} oldImage={pictureUrl} />
 
-          <Button variant="contained" onClick={handleSubmit} sx={{ mt: 3 }} disabled={!title || !content}>
+          <Button variant="contained" onClick={handleSubmit} sx={{ mt: 3 }} disabled={!title || !content || loading}>
             Save
           </Button>
 
