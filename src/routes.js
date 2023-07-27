@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { Navigate, useRoutes } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { Navigate, useNavigate, useRoutes } from 'react-router-dom';
 import { AuthContext } from './providers/authProvider'; // Import AuthContext
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -21,6 +21,17 @@ import CreateUMKMPicturePage from './pages/UMKMPicturePage';
 
 export default function Router() {
   const { isAuthenticated } = useContext(AuthContext); // Access token from AuthContext
+  const [path, setPath] = useState('');
+  const navigate = useNavigate();
+  if (path === '') {
+    setPath(window.location.pathname);
+  }
+
+  useEffect(() => {
+    if (path !== window.location.pathname) {
+      navigate(path);
+    }
+  }, []);
 
   const routes = useRoutes([
     {

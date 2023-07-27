@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { Container, Typography, Button, Stack, TextField } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ImageUpload from '../components/form/FileUpload';
@@ -54,7 +54,53 @@ export default function CreateBlogPostPage() {
 
     // Redirect to the article page
     navigate('/dashboard/articles', { state: { successMessage: 'Berhasil membuat artikel!' } });
+    localStorage.removeItem('blogPostDraft');
   };
+  // Function to save the state to local storage
+  const saveToLocalStorage = () => {
+    if (!loading) {
+      // Create an object to store the state variables you want to save
+      const draftData = {
+        title,
+        author,
+        content,
+        image,
+      };
+
+      // Convert the object to a JSON string and save it to local storage
+      localStorage.setItem('blogPostDraft', JSON.stringify(draftData));
+    }
+  };
+
+  const loadFromLocalStorage = () => {
+    // Get the JSON string from local storage and parse it back to an object
+    const savedData = localStorage.getItem('blogPostDraft');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+
+      // Update the state variables with the values from local storage
+      setTitle(parsedData.title || '');
+      setAuthor(parsedData.author || '');
+      setContent(parsedData.content || '');
+      setImage(parsedData.image || null);
+    }
+  };
+
+  // Use the useEffect hook to save the state to local storage whenever it changes
+  useEffect(() => {
+    // Save the state to local storage every 5 seconds (adjust the interval as needed)
+    const intervalId = setInterval(() => {
+      saveToLocalStorage();
+    }, 0); // Save every 5 seconds
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [title, author, content, image, loading]);
+
+  // Use the useEffect hook to load the state from local storage when the component mounts
+  useEffect(() => {
+    loadFromLocalStorage();
+  }, []);
 
   return (
     <>

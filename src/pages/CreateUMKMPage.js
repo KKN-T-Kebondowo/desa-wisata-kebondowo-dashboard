@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { Container, Typography, Button, Stack, TextField } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import ImageUpload from '../components/form/FileUpload';
@@ -76,7 +76,57 @@ export default function CreateUMKMPage() {
 
     // Redirect to the article page
     navigate('/dashboard/umkm', { state: { successMessage: 'Berhasil menambahkan tempat umkm baru!' } });
+    localStorage.removeItem('umkmDraft');
   };
+
+  // Function to save the state to local storage
+  const saveToLocalStorage = () => {
+    if (!loading) {
+      // Create an object to store the state variables you want to save
+      const draftData = {
+        title,
+        content,
+        contact,
+        owner,
+        image,
+        map,
+      };
+
+      // Convert the object to a JSON string and save it to local storage
+      localStorage.setItem('umkmDraft', JSON.stringify(draftData));
+    }
+  };
+
+  const loadFromLocalStorage = () => {
+    // Get the JSON string from local storage and parse it back to an object
+    const savedData = localStorage.getItem('umkmDraft');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+
+      // Update the state variables with the values from local storage
+      setTitle(parsedData.title || '');
+      setContent(parsedData.content || '');
+      setContact(parsedData.contact || '+62');
+      setOwner(parsedData.owner || '');
+      setImage(parsedData.image || null);
+      setMap(parsedData.map || { lat: -7.3060529, lng: 110.4007872 });
+    }
+  };
+
+  // Use the useEffect hook to save the state to local storage whenever it changes
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      saveToLocalStorage();
+    }, 0);
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [title, content, contact, owner, image, map, loading]);
+
+  // Use the useEffect hook to load the state from local storage when the component mounts
+  useEffect(() => {
+    loadFromLocalStorage();
+  }, []);
 
   return (
     <>

@@ -5,18 +5,20 @@ import axios from 'axios';
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
+  const [loading, setLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(['access_token', 'refresh_token']);
   const [accessToken, setAccessToken] = useState(cookies.access_token || null);
   const [refreshToken, setRefreshToken] = useState(cookies.refresh_token || null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const token = cookies.access_token || null;
 
   useEffect(() => {
+    setLoading(true);
     if (accessToken) {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
     }
+    setLoading(false);
   }, [accessToken]);
 
   const login = (tokens) => {
@@ -72,7 +74,7 @@ const AuthProvider = ({ children }) => {
   );
 
   return (
-    <AuthContext.Provider value={{ accessToken, refreshToken, isAuthenticated, login, logout, api }}>
+    <AuthContext.Provider value={{ accessToken, refreshToken, isAuthenticated, login, logout, api, loading }}>
       {children}
     </AuthContext.Provider>
   );
