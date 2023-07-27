@@ -85,7 +85,12 @@ export default function DashboardAppPage() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Pengunjung" total={234} color="error" icon={'ant-design:bug-filled'} />
+            <AppWidgetSummary
+              title="UMKM"
+              total={data ? data.total_umkm : 0}
+              color="error"
+              icon={'ant-design:bug-filled'}
+            />
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
@@ -101,16 +106,23 @@ export default function DashboardAppPage() {
                   data: data ? data.article_per_month : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 },
                 {
+                  name: 'Wisata',
+                  type: 'line',
+                  fill: 'solid',
+                  data: data ? data.tourism_per_month : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                },
+                {
                   name: 'Galeri',
                   type: 'area',
                   fill: 'gradient',
                   data: data ? data.gallery_per_month : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 },
+
                 {
-                  name: 'Wisata',
+                  name: 'UMKM',
                   type: 'line',
                   fill: 'solid',
-                  data: data ? data.tourism_per_month : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  data: data ? data.umkm_per_month : [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
                 },
               ]}
             />
@@ -123,8 +135,14 @@ export default function DashboardAppPage() {
                 { label: 'Wisata', value: data ? data.total_tourism : 0 },
                 { label: 'Galeri', value: data ? data.total_gallery : 0 },
                 { label: 'Artikel', value: data ? data.total_article : 0 },
+                { label: 'UMKM', value: data ? data.total_umkm : 0 },
               ]}
-              chartColors={[theme.palette.info.main, theme.palette.warning.main, theme.palette.error.main]}
+              chartColors={[
+                theme.palette.warning.main,
+                theme.palette.info.main,
+                theme.palette.primary.main,
+                theme.palette.error.main,
+              ]}
             />
           </Grid>
 
